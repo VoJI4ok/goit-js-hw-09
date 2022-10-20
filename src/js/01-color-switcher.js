@@ -7,9 +7,9 @@ function getRandomHexColor() {
   body.style.textAlign = "center";
   const buttons = document.querySelectorAll('button');
   buttons.forEach(but => {
-          but.style.width = "300px"
-          but.style.height = "150px"
-          but.style.fontSize = "30px"
+          but.style.width = "200px"
+          but.style.height = "100px"
+          but.style.fontSize = "20px"
       }
   );
   const startButton = document.querySelector('[data-start]');
