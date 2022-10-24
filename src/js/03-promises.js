@@ -1,39 +1,38 @@
 import Notiflix from 'notiflix';
 
-const refs = {
-  delay: document.querySelector('input[name=delay]'),
-  step: document.querySelector('input[name=step]'),
-  amount: document.querySelector('input[name=amount]'),
-  submitButton: document.querySelector('button'),
-};
+const firstDelay = document.querySelector('input[name="delay"]');
+const delayStep = document.querySelector('input[name="step"]');
+const amount = document.querySelector('input[name="amount"]');
+const button = document.querySelector('button');
 
-refs.submitButton.addEventListener('click', onSubmit);
-
-function onSubmit(event) {
-  event.preventDefault();
-  const delay = +refs.delay.value;
-  const step = +refs.step.value;
-  const amount = +refs.amount.value;
-  callPromise(delay, step, amount);
-}
-
-function callPromise(delay, step, amount) {
-  for (let i = 1; i <= amount; i += 1) {
-    let position = i;
-    createPromise({ position, delay });
-    delay += step;
-  }
-}
-
-function createPromise({ position, delay }) {
+function createPromise(position, delay) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       const shouldResolve = Math.random() > 0.3;
       if (shouldResolve) {
-        Notiflix.Notify.success(`Fulfilled promise ${position} in ${delay}ms`);
+        resolve({ position, delay });
       } else {
-        Notiflix.Notify.failure(`Rejected promise ${position} in ${delay}ms`);
+        reject({ position, delay });
       }
     }, delay);
   });
+}
+button.addEventListener('click', onBtnClick);
+function onBtnClick(evt) {
+  evt.preventDefault();
+  let delay = Number(firstDelay.value);
+  let step = Number(delayStep.value);
+  for (let i = 0; i < amount.value; i += 1) {
+    createPromise(1 + i, delay + i * step)
+      .then(({ position, delay }) => {
+        Notiflix.Notify.success(
+          ` Fulfilled promise ${position} in ${delay}ms`
+        );
+      })
+      .catch(({ position, delay }) => {
+        Notiflix.Notify.failure(
+          ` Rejected promise ${position} in ${delay}ms`
+        );
+      });
+  }
 }
